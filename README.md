@@ -1,2 +1,2 @@
 # certbot
- cerbot image docker with dns-dinahosting plugin
+certbot image docker with dns-dinahosting plugin
