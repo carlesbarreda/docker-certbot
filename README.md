@@ -1,6 +1,6 @@
 # carlesbarreda/certbot
 
-Multiplatform image based on [certbot/certbot](https://hub.docker.com/r/certbot/certbot/) with [Dinahosting DNS Authenticator plugin](https://github.com/rdrgzlng/certbot-dns-dinahosting) by @rdrgzlng for [certbot](https://certbot.eff.org/).
+Multiplatform image based on [certbot/certbot](https://hub.docker.com/r/certbot/certbot/) with [Dinahosting DNS Authenticator plugin](https://github.com/rdrgzlng/certbot-dns-dinahosting) for [certbot](https://certbot.eff.org/).
 
 
 ## How to use
