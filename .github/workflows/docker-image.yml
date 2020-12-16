@@ -15,6 +15,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+    - name: Enable Docker cli experimental
+      run: |
+        mkdir ~/.docker
+        echo '{"experimental":"enabled"}' > ~/.docker/config.json
     - name: Install buildx
       id: buildx
       uses: crazy-max/ghaction-docker-buildx@v1
@@ -35,7 +39,10 @@ jobs:
         docker buildx build --tag carlesbarreda/certbot:arm32v6-latest --build-arg ARCH=arm32v6 --platform linux/arm/v6 --load .
         docker push carlesbarreda/certbot:arm32v6-latest
     - name: Build the Docker image manifest
+      env:
+        DOCKER_CLI_EXPERIMENTAL: enabled
       run: |
+        export DOCKER_CLI_EXPERIMENTAL=enabled \
         docker manifest create \
           carlesbarreda/certbot:latest \
           --amend carlesbarreda/certbot:amd64-latest \
