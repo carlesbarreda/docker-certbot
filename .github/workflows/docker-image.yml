@@ -36,12 +36,7 @@ jobs:
         docker push carlesbarreda/certbot:arm32v6-latest
     - name: Enable Docker cli experimental
       run: |
-        echo mkdir ~/.docker
-        echo '{"experimental":"enabled"}'  ~/.docker/config.json
-        cat ~/.docker/config.json
-        echo ---------------------------------------
-        sed 's/{/&"experimental":"enabled",/' ~/.docker/config.json > ~/.docker/config.json
-        echo ---------------------------------------
+        echo "$(sed 's/{/&"experimental":"enabled",/' ~/.docker/config.json)" > ~/.docker/config.json
         cat ~/.docker/config.json
     - name: Build the Docker image manifest
       env:
