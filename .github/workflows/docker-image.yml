@@ -34,6 +34,8 @@ jobs:
       run: |
         docker buildx build --tag carlesbarreda/certbot:arm32v6-latest --build-arg ARCH=arm32v6 --platform linux/arm/v6 --load .
         docker push carlesbarreda/certbot:arm32v6-latest
+    - name: Set env
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
     - name: Build the Docker image manifest
       env:
         DOCKER_CLI_EXPERIMENTAL: enabled
@@ -44,6 +46,12 @@ jobs:
           --amend carlesbarreda/certbot:arm64v8-latest \
           --amend carlesbarreda/certbot:arm32v6-latest
         docker manifest push carlesbarreda/certbot:latest
+        docker manifest create \
+          carlesbarreda/certbot:$RELEASE_VERSION \
+          --amend carlesbarreda/certbot:amd64-latest \
+          --amend carlesbarreda/certbot:arm64v8-latest \
+          --amend carlesbarreda/certbot:arm32v6-latest
+        docker manifest push carlesbarreda/certbot:$RELEASE_VERSION
     - name: Remove arch tag
       run: |
         LOGIN=$(echo -e "{\n  \"username\": \"${{ secrets.DOCKER_USERNAME }}\",\n  \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"\n}\n")
@@ -57,6 +65,3 @@ jobs:
         curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/arm32v6-latest/" \
           -X DELETE \
           -H "Authorization: JWT ${TOKEN}"
-        docker image rm carlesbarreda/certbot:amd64-latest
-        docker image rm carlesbarreda/certbot:arm64v8-latest
-        docker image rm carlesbarreda/certbot:arm64v8-latest
