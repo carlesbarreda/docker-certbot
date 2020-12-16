@@ -39,13 +39,15 @@ jobs:
         echo mkdir ~/.docker
         echo '{"experimental":"enabled"}'  ~/.docker/config.json
         cat ~/.docker/config.json
-        sed 's/{/&"experimental":"enabled",/' ~/.docker/config.json
+        echo ---------------------------------------
+        sed 's/{/&"experimental":"enabled",/' ~/.docker/config.json > ~/.docker/config.json
+        echo ---------------------------------------
         cat ~/.docker/config.json
     - name: Build the Docker image manifest
       env:
         DOCKER_CLI_EXPERIMENTAL: enabled
       run: |
-        export DOCKER_CLI_EXPERIMENTAL=enabled \
+        export DOCKER_CLI_EXPERIMENTAL=enabled
         docker manifest create \
           carlesbarreda/certbot:latest \
           --amend carlesbarreda/certbot:amd64-latest \
