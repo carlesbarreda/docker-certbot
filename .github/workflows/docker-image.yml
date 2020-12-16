@@ -24,15 +24,15 @@ jobs:
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
     - name: Build the Docker image amd64
       run: |
-        docker buildx build --tag carlesbarreda/certbot:amd64-latest --build-arg ARCH=amd64 --platform linux/amd64 .
+        docker buildx build --tag carlesbarreda/certbot:amd64-latest --build-arg ARCH=amd64 --platform linux/amd64 --load .
         docker push carlesbarreda/certbot:amd64-latest
     - name: Build the Docker image arm64v8
       run: |
-        docker buildx build --tag carlesbarreda/certbot:arm64v8-latest --build-arg ARCH=arm64v8 --platform linux/arm64 .
+        docker buildx build --tag carlesbarreda/certbot:arm64v8-latest --build-arg ARCH=arm64v8 --platform linux/arm64 --load .
         docker push carlesbarreda/certbot:arm64v8-latest
     - name: Build the Docker image arm32v6
       run: |
-        docker buildx build --tag carlesbarreda/certbot:arm32v6-latest --build-arg ARCH=arm32v6 --platform linux/arm/v6 .
+        docker buildx build --tag carlesbarreda/certbot:arm32v6-latest --build-arg ARCH=arm32v6 --platform linux/arm/v6 --load .
         docker push carlesbarreda/certbot:arm32v6-latest
     - name: Build the Docker image manifest
       run: |
