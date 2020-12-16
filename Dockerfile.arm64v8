@@ -1,4 +1,4 @@
-FROM certbot/certbot:arm64v8-latest
+FROM arm64v8/certbot/certbot:arm64v8-latest
 
 LABEL maintainer="docker@carlesbarreda.cat"
 

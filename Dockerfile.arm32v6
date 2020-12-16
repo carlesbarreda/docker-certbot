@@ -1,4 +1,4 @@
-FROM certbot/certbot:arm32v6-latest
+FROM arm32v6/certbot/certbot:arm32v6-latest
 
 LABEL maintainer="docker@carlesbarreda.cat"
 
