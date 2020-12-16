@@ -35,7 +35,7 @@ jobs:
         docker buildx build --tag carlesbarreda/certbot:arm32v6-latest --build-arg ARCH=arm32v6 --platform linux/arm/v6 --load .
         docker push carlesbarreda/certbot:arm32v6-latest
     - name: Set env
-      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
     - name: Build the Docker image manifest
       env:
         DOCKER_CLI_EXPERIMENTAL: enabled
