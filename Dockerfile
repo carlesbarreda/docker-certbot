@@ -1,5 +1,7 @@
-ARG ARCH=
-FROM ${ARCH}/certbot/certbot:${ARCH}-latest
+FROM --platform=${TARGETPLATFORM} certbot/certbot:${ARCH}-latest
+
+ARG ARCH
+ARG TARGETPLATFORM
 
 LABEL maintainer="docker@carlesbarreda.cat"
 

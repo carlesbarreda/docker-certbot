@@ -13,16 +13,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Install buildx
+      id: buildx
+      uses: crazy-max/ghaction-docker-buildx@v1
+      with:
+        version: latest
+    - name: Login to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    - name: Build the Docker image amd64
       run: |
-        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        docker build --tag carlesbarreda/certbot:amd64-latest --build-arg ARCH=amd64 .
+        docker buildx build --tag carlesbarreda/certbot:amd64-latest --build-arg ARCH=amd64 --platform linux/amd64 .
         docker push carlesbarreda/certbot:amd64-latest
-        docker build --tag carlesbarreda/certbot:arm64v8-latest --build-arg ARCH=arm64v8 .
+    - name: Build the Docker image arm64v8
+      run: |
+        docker buildx build --tag carlesbarreda/certbot:arm64v8-latest --build-arg ARCH=arm64v8 --platform linux/arm64 .
         docker push carlesbarreda/certbot:arm64v8-latest
-        docker build --tag carlesbarreda/certbot:arm32v6-latest --build-arg ARCH=arm32v6 .
+    - name: Build the Docker image arm32v6
+      run: |
+        docker buildx build --tag carlesbarreda/certbot:arm32v6-latest --build-arg ARCH=arm32v6 --platform linux/arm/v6 .
         docker push carlesbarreda/certbot:arm32v6-latest
+    - name: Build the Docker image manifest
+      run: |
         docker manifest create \
           carlesbarreda/certbot:latest \
           --amend carlesbarreda/certbot:amd64-latest \
