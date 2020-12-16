@@ -34,15 +34,10 @@ jobs:
       run: |
         docker buildx build --tag carlesbarreda/certbot:arm32v6-latest --build-arg ARCH=arm32v6 --platform linux/arm/v6 --load .
         docker push carlesbarreda/certbot:arm32v6-latest
-    - name: Enable Docker cli experimental
-      run: |
-        echo "$(sed 's/{/&"experimental":"enabled",/' ~/.docker/config.json)" > ~/.docker/config.json
-        cat ~/.docker/config.json
     - name: Build the Docker image manifest
       env:
         DOCKER_CLI_EXPERIMENTAL: enabled
       run: |
-        export DOCKER_CLI_EXPERIMENTAL=enabled
         docker manifest create \
           carlesbarreda/certbot:latest \
           --amend carlesbarreda/certbot:amd64-latest \
