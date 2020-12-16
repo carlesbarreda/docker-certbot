@@ -1,0 +1,30 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: |
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        docker build . --file Dockerfile.amd64 --tag carlesbarreda/certbot:amd64-latest
+        docker push carlesbarreda/certbot:amd64-latest
+        docker build . --file Dockerfile.arm64v8 --tag carlesbarreda/certbot:arm64v8-latest
+        docker push carlesbarreda/certbot:arm64v8-latest
+        docker build . --file Dockerfile.arm32v6 --tag carlesbarreda/certbot:arm32v6-latest
+        docker push carlesbarreda/certbot:arm32v6-latest
+        docker manifest create \
+          carlesbarreda/certbot:latest \
+          --amend carlesbarreda/certbot:amd64-latest \
+          --amend carlesbarreda/certbot:arm64v8-latest \
+          --amend carlesbarreda/certbot:arm32v6-latest
