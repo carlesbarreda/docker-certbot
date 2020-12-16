@@ -1,4 +1,5 @@
-FROM certbot/certbot:latest
+ARG ARCH=
+FROM ${ARCH}/certbot/certbot:${ARCH}-latest
 
 LABEL maintainer="docker@carlesbarreda.cat"
 
