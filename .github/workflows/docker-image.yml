@@ -18,7 +18,8 @@ jobs:
     - name: Enable Docker cli experimental
       run: |
         mkdir ~/.docker
-        echo '{"experimental":"enabled"}' > ~/.docker/config.json
+        echo '{"experimental":"enabled"}'  ~/.docker/config.json
+        cat ~/.docker/config.json
     - name: Install buildx
       id: buildx
       uses: crazy-max/ghaction-docker-buildx@v1
