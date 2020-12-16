@@ -28,3 +28,4 @@ jobs:
           --amend carlesbarreda/certbot:amd64-latest \
           --amend carlesbarreda/certbot:arm64v8-latest \
           --amend carlesbarreda/certbot:arm32v6-latest
+        docker manifest push carlesbarreda/certbot:latest
