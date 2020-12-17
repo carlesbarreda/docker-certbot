@@ -20,53 +20,51 @@ jobs:
       with:
         version: latest
     - name: Set env
-      run: |
-        echo "BRANCH=v1.10.1" >> $GITHUB_ENV \
-        echo "RELEASE=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      run: echo "RELEASE=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
     - name: Login to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
     - name: Build the Docker image amd64
       run: |
-        docker buildx build --tag carlesbarreda/certbot:amd64-$BRANCH --build-arg ARCH=amd64 --build-arg BRANCH=$BRANCH --platform linux/amd64 --load .
-        docker push carlesbarreda/certbot:amd64-$BRANCH
+        docker buildx build --tag carlesbarreda/certbot:amd64-$RELEASE --build-arg ARCH=amd64 --build-arg BRANCH=$RELEASE --platform linux/amd64 --load .
+        docker push carlesbarreda/certbot:amd64-$RELEASE
     - name: Build the Docker image arm64v8
       run: |
-        docker buildx build --tag carlesbarreda/certbot:arm64v8-$BRANCH --build-arg ARCH=arm64v8 --build-arg BRANCH=$BRANCH --platform linux/arm64 --load .
-        docker push carlesbarreda/certbot:arm64v8-$BRANCH
+        docker buildx build --tag carlesbarreda/certbot:arm64v8-$RELEASE --build-arg ARCH=arm64v8 --build-arg BRANCH=$RELEASE --platform linux/arm64 --load .
+        docker push carlesbarreda/certbot:arm64v8-$RELEASE
     - name: Build the Docker image arm32v6
       run: |
-        docker buildx build --tag carlesbarreda/certbot:arm32v6-$BRANCH --build-arg ARCH=arm32v6 --build-arg BRANCH=$BRANCH --platform linux/arm/v6 --load .
-        docker push carlesbarreda/certbot:arm32v6-$BRANCH
+        docker buildx build --tag carlesbarreda/certbot:arm32v6-$RELEASE --build-arg ARCH=arm32v6 --build-arg BRANCH=$RELEASE --platform linux/arm/v6 --load .
+        docker push carlesbarreda/certbot:arm32v6-$RELEASE
     - name: Build the Docker image latest manifest
       env:
         DOCKER_CLI_EXPERIMENTAL: enabled
       run: |
         docker manifest create \
           carlesbarreda/certbot:latest \
-          --amend carlesbarreda/certbot:amd64-$BRANCH \
-          --amend carlesbarreda/certbot:arm64v8-$BRANCH \
-          --amend carlesbarreda/certbot:arm32v6-$BRANCH
+          --amend carlesbarreda/certbot:amd64-$RELEASE \
+          --amend carlesbarreda/certbot:arm64v8-$RELEASE \
+          --amend carlesbarreda/certbot:arm32v6-$RELEASE
         docker manifest push carlesbarreda/certbot:latest
     - name: Build the Docker image branch manifest
       env:
         DOCKER_CLI_EXPERIMENTAL: enabled
       run: |
         docker manifest create \
-          carlesbarreda/certbot:$BRANCH \
-          --amend carlesbarreda/certbot:amd64-$BRANCH \
-          --amend carlesbarreda/certbot:arm64v8-$BRANCH \
-          --amend carlesbarreda/certbot:arm32v6-$BRANCH
-        docker manifest push carlesbarreda/certbot:$BRANCH
+          carlesbarreda/certbot:$RELEASE \
+          --amend carlesbarreda/certbot:amd64-$RELEASE \
+          --amend carlesbarreda/certbot:arm64v8-$RELEASE \
+          --amend carlesbarreda/certbot:arm32v6-$RELEASE
+        docker manifest push carlesbarreda/certbot:$RELEASE
     - name: Remove arch tag
       run: |
         LOGIN=$(echo -e "{\n  \"username\": \"${{ secrets.DOCKER_USERNAME }}\",\n  \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"\n}\n")
         TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "$LOGIN" "https://hub.docker.com/v2/users/login/" | jq -r .token)
-        curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/amd64-$BRANCH/" \
+        curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/amd64-$RELEASE/" \
           -X DELETE \
           -H "Authorization: JWT ${TOKEN}"
-        curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/arm64v8-$BRANCH/" \
+        curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/arm64v8-$RELEASE/" \
           -X DELETE \
           -H "Authorization: JWT ${TOKEN}"
-        curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/arm32v6-$BRANCH/" \
+        curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/arm32v6-$RELEASE/" \
           -X DELETE \
           -H "Authorization: JWT ${TOKEN}"
