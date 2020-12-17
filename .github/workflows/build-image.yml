@@ -1,15 +1,11 @@
 name: Docker Image CI
 
 on:
-  push:
-    #branches: [ main ]
-    #branches:
-    tags:
-      - 'v*.*.*'
-  #pull_request:
-  #  #branches: [ main ]
-  #  branches:
-  #    - 'v*.*.*'
+  release:
+    - published
+    - created
+    - edited
+    - released
 
 jobs:
 
