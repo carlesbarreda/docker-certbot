@@ -1,5 +1,6 @@
 ARG ARCH
-FROM --platform=${TARGETPLATFORM} certbot/certbot:${ARCH}-latest
+ARG BRANCH
+FROM --platform=${TARGETPLATFORM} certbot/certbot:${ARCH}-${BRANCH}
 
 ARG TARGETPLATFORM
 
