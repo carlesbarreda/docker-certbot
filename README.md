@@ -2,6 +2,8 @@
 
 Multiplatform image based on [certbot/certbot](https://hub.docker.com/r/certbot/certbot/) with [Dinahosting DNS Authenticator plugin](https://github.com/rdrgzlng/certbot-dns-dinahosting) for [certbot](https://certbot.eff.org/).
 
+![Docker Image CI](https://github.com/carlesbarreda/docker-certbot/workflows/Docker%20Image%20CI/badge.svg?branch=v1.10.1)
+
 
 ## How to use
 
