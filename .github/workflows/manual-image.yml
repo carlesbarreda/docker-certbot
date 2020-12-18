@@ -10,7 +10,7 @@ on:
       latest:
         description: 'Is latest?'
         required: true
-        default: true
+        default: 'yes'
 
 jobs:
   build:
@@ -50,7 +50,7 @@ jobs:
         docker manifest push carlesbarreda/certbot:$RELEASE
 
     - name: Build the Docker image latest manifest
-      if: ${{ github.event.inputs.release }}
+      if: ${{ github.event.inputs.release == 'yes' }}
       env:
         DOCKER_CLI_EXPERIMENTAL: enabled
       run: |
