@@ -48,6 +48,14 @@ jobs:
           --amend carlesbarreda/certbot:arm32v6-latest
         docker manifest push carlesbarreda/certbot:$RELEASE
 
+    #- name: Remove latest tag
+    #  run: |
+    #    LOGIN=$(echo -e "{\n  \"username\": \"${{ secrets.DOCKER_USERNAME }}\",\n  \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"\n}\n")
+    #    TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "$LOGIN" "https://hub.docker.com/v2/users/login/" | jq -r .token)
+    #    curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/latest/" \
+    #      -X DELETE \
+    #      -H "Authorization: JWT ${TOKEN}"
+
     - name: Build the Docker image latest manifest
       if: ${{ github.event.inputs.release == 'yes' }}
       env:
