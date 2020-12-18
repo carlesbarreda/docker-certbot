@@ -8,7 +8,7 @@ name: Manual Docker Image CI
 on:
   workflow_dispatch:
     inputs:
-      release:
+      tags:
         description: 'Cerbot release'
         required: true
         default: 'v1.10.1'
@@ -33,52 +33,39 @@ jobs:
         version: latest
     - name: Set env
       #run: echo "RELEASE=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      run: echo "RELEASE=${{ github.event.inputs.release }}" >> $GITHUB_ENV
+      run: echo "RELEASE=${{ github.event.inputs.tags }}" >> $GITHUB_ENV
     - name: Login to Docker Hub
       run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
     - name: Build the Docker image amd64
-      run: |
-        docker buildx build --tag carlesbarreda/certbot:amd64-$RELEASE --build-arg ARCH=amd64 --build-arg BRANCH=$RELEASE --platform linux/amd64 --load .
-        docker push carlesbarreda/certbot:amd64-$RELEASE
+      run: docker buildx build --tag carlesbarreda/certbot:amd64-$RELEASE --build-arg ARCH=amd64 --build-arg BRANCH=$RELEASE --platform linux/amd64 --load .
     - name: Build the Docker image arm64v8
-      run: |
-        docker buildx build --tag carlesbarreda/certbot:arm64v8-$RELEASE --build-arg ARCH=arm64v8 --build-arg BRANCH=$RELEASE --platform linux/arm64 --load .
-        docker push carlesbarreda/certbot:arm64v8-$RELEASE
+      run: docker buildx build --tag carlesbarreda/certbot:arm64v8-$RELEASE --build-arg ARCH=arm64v8 --build-arg BRANCH=$RELEASE --platform linux/arm64 --load .
     - name: Build the Docker image arm32v6
-      run: |
-        docker buildx build --tag carlesbarreda/certbot:arm32v6-$RELEASE --build-arg ARCH=arm32v6 --build-arg BRANCH=$RELEASE --platform linux/arm/v6 --load .
-        docker push carlesbarreda/certbot:arm32v6-$RELEASE
-    - name: Build the Docker image latest manifest
-      if: ${{ github.event.inputs.release }}
-      env:
-        DOCKER_CLI_EXPERIMENTAL: enabled
-      run: |
-        docker manifest create \
-          carlesbarreda/certbot:latest \
-          --amend carlesbarreda/certbot:amd64-$RELEASE \
-          --amend carlesbarreda/certbot:arm64v8-$RELEASE \
-          --amend carlesbarreda/certbot:arm32v6-$RELEASE
-        docker manifest push carlesbarreda/certbot:latest
+      run: docker buildx build --tag carlesbarreda/certbot:arm32v6-$RELEASE --build-arg ARCH=arm32v6 --build-arg BRANCH=$RELEASE --platform linux/arm/v6 --load .
     - name: Build the Docker image branch manifest
       env:
         DOCKER_CLI_EXPERIMENTAL: enabled
-      run: |
-        docker manifest create \
+      run: docker manifest create \
           carlesbarreda/certbot:$RELEASE \
           --amend carlesbarreda/certbot:amd64-$RELEASE \
           --amend carlesbarreda/certbot:arm64v8-$RELEASE \
           --amend carlesbarreda/certbot:arm32v6-$RELEASE
-        docker manifest push carlesbarreda/certbot:$RELEASE
+    - name: Build the Docker image latest manifest
+      if: ${{ github.event.inputs.release }}
+      env:
+        DOCKER_CLI_EXPERIMENTAL: enabled
+      run: docker manifest create \
+          carlesbarreda/certbot:latest \
+          --amend carlesbarreda/certbot:amd64-$RELEASE \
+          --amend carlesbarreda/certbot:arm64v8-$RELEASE \
+          --amend carlesbarreda/certbot:arm32v6-$RELEASE
     - name: Remove arch tag
       run: |
-        LOGIN=$(echo -e "{\n  \"username\": \"${{ secrets.DOCKER_USERNAME }}\",\n  \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"\n}\n")
-        TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "$LOGIN" "https://hub.docker.com/v2/users/login/" | jq -r .token)
-        curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/amd64-$RELEASE/" \
-          -X DELETE \
-          -H "Authorization: JWT ${TOKEN}"
-        curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/arm64v8-$RELEASE/" \
-          -X DELETE \
-          -H "Authorization: JWT ${TOKEN}"
-        curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/arm32v6-$RELEASE/" \
-          -X DELETE \
-          -H "Authorization: JWT ${TOKEN}"
+        docker rmi carlesbarreda/certbot:amd64-$RELEASE
+        docker rmi carlesbarreda/certbot:arm64v8-$RELEASE
+        docker rmi carlesbarreda/certbot:arm32v6-$RELEASE
+    - name: Push release manifest
+      run: docker manifest push carlesbarreda/certbot:$RELEASE
+    - name: Push latest manifest
+      if: ${{ github.event.inputs.release }}
+      run: docker manifest push carlesbarreda/certbot:latest
