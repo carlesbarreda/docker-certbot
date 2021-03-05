@@ -2,8 +2,7 @@ FROM certbot/certbot:amd64-latest
 
 LABEL maintainer="docker@carlesbarreda.cat"
 
-RUN /usr/local/bin/python -m pip install --upgrade pip \
-    && pip install https://github.com/rdrgzlng/certbot-dns-dinahosting/tarball/master
+RUN pip install https://github.com/rdrgzlng/certbot-dns-dinahosting/tarball/master
 
 VOLUME ["/etc/letsencrypt"]
 VOLUME ["/var/lib/letsencrypt"]
