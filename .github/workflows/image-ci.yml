@@ -2,6 +2,8 @@ name: Docker Image CI
 
 on:
   workflow_dispatch:
+    branches:
+      - devel
 
 env:
   IMAGE_NAME: ${{ github.event.repository.name }}
