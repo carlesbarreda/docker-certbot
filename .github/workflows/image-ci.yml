@@ -1,0 +1,56 @@
+name: Docker Image CI
+
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: ${{ github.event.repository.name }}
+
+jobs:
+  lint:
+    name: Lint Dockerfile
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Lint Dockerfile
+        uses: brpaz/hadolint-action@v1.2.1
+        with:
+          dockerfile: Dockerfile
+
+      - name: Lint Dockerfile.buildx
+        uses: brpaz/hadolint-action@v1.2.1
+        with:
+          dockerfile: Dockerfile.buildx
+
+  build:
+    name: Build and scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # https://github.com/docker/setup-buildx-action
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Image tag
+        run: echo carlesbarreda/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      - name: Build Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          load: true
+          tags: |
+            carlesbarreda/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'carlesbarreda/${{ env.IMAGE_NAME }}:${{ github.sha }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
