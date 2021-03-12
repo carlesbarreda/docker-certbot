@@ -23,12 +23,7 @@ jobs:
         with:
           dockerfile: Dockerfile
 
-      - name: Lint Dockerfile
-        uses: brpaz/hadolint-action@v1.2.1
-        with:
-          dockerfile: Dockerfile
-
-  build:
+  scanner:
     name: Build and scan
     runs-on: ubuntu-latest
     steps:
@@ -134,6 +129,31 @@ jobs:
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+
+  pusher:
+    name: Build and push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: all
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          install: true
+
+      - name: Get Image Release
+        run: |
+          TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
+          DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
+          RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
+          echo "RELEASE=$RELEASE" >> $GITHUB_ENV
 
       #- name: Build amd64
       #  uses: docker/build-push-action@v2
