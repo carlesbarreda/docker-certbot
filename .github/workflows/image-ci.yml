@@ -23,10 +23,10 @@ jobs:
         with:
           dockerfile: Dockerfile
 
-      - name: Lint Dockerfile.buildx
+      - name: Lint Dockerfile
         uses: brpaz/hadolint-action@v1.2.1
         with:
-          dockerfile: Dockerfile.buildx
+          dockerfile: Dockerfile
 
   build:
     name: Build and scan
@@ -70,7 +70,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.buildx
+          file: ./Dockerfile
           platforms: linux/amd64
           build-args: |
             ARCH=amd64
@@ -83,7 +83,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.buildx
+          file: ./Dockerfile
           platforms: linux/arm64
           build-args: |
             ARCH=arm64v8
@@ -96,7 +96,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.buildx
+          file: ./Dockerfile
           platforms: linux/arm/v6
           build-args: |
             ARCH=arm32v6
@@ -139,7 +139,7 @@ jobs:
       #  uses: docker/build-push-action@v2
       #  with:
       #    context: .
-      #    file: ./Dockerfile.buildx
+      #    file: ./Dockerfile
       #    platforms: linux/amd64
       #    build-args: |
       #      ARCH=amd64
@@ -152,7 +152,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.buildx
+          file: ./Dockerfile
           platforms: linux/arm64
           build-args: |
             ARCH=arm64v8
@@ -165,7 +165,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          file: ./Dockerfile.buildx
+          file: ./Dockerfile
           platforms: linux/arm/v6
           build-args: |
             ARCH=arm32v6
@@ -197,7 +197,16 @@ jobs:
               --amend carlesbarreda/certbot:arm32v6-latest
           docker manifest push carlesbarreda/certbot:latest
 
-#TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
-#DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
-#RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
-#echo $RELEASE
+    #- name: Remove arch tag
+    #  run: |
+    #    LOGIN=$(echo -e "{\n  \"username\": \"${{ secrets.DOCKER_USERNAME }}\",\n  \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"\n}\n")
+    #    TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "$LOGIN" "https://hub.docker.com/v2/users/login/" | jq -r .token)
+    #    curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/amd64-latest/" \
+    #      -X DELETE \
+    #      -H "Authorization: JWT ${TOKEN}"
+    #    curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/arm64v8-latest/" \
+    #      -X DELETE \
+    #      -H "Authorization: JWT ${TOKEN}"
+    #    curl "https://hub.docker.com/v2/repositories/carlesbarreda/certbot/tags/arm32v6-latest/" \
+    #      -X DELETE \
+    #      -H "Authorization: JWT ${TOKEN}"
