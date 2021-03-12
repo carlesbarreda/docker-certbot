@@ -13,8 +13,8 @@ export DOCKER_BUILDKIT=1
 #docker buildx inspect --bootstrap
 
 docker buildx build \
-    --tag ${IMAGE_NAME} \
-    --tag ${DOCKER_REPO}:amd64-${$RELEASE} \
+    --tag "${IMAGE_NAME}" \
+    --tag "${DOCKER_REPO}:amd64-${$RELEASE}" \
     --build-arg ARCH=amd64 \
     --platform linux/amd64 \
     --progress=plain \
