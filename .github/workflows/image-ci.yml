@@ -8,7 +8,6 @@ on:
   workflow_dispatch:
 
 env:
-  #IMAGE_NAME: ${{ github.event.repository.name }}
   IMAGE_NAME: carlesbarreda/certbot
 
 jobs:
@@ -38,32 +37,21 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-        id: qemu
         with:
           image: tonistiigi/binfmt:latest
           platforms: all
 
-      - name: Available platforms
-        run: echo ${{ steps.qemu.outputs.platforms }}
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-        id: buildx
         with:
           install: true
 
-      - name: Builder instance name
-        run: echo ${{ steps.buildx.outputs.name }}
-
-      - name: Available platforms
-        run: echo ${{ steps.buildx.outputs.platforms }}
-
-      - name: Image tag
+      - name: Get Image Release
         run: |
           TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
           DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
-          TAGNAME=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
-          echo "TAGNAME=$TAGNAME" >> $GITHUB_ENV
+          RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
+          echo "RELEASE=$RELEASE" >> $GITHUB_ENV
 
       - name: Build amd64
         uses: docker/build-push-action@v2
@@ -74,7 +62,7 @@ jobs:
           build-args: |
             ARCH=amd64
           tags: |
-            ${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}
+            ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:amd64-latest
           load: true
 
@@ -87,7 +75,7 @@ jobs:
           build-args: |
             ARCH=amd64
           tags: |
-            ${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}
+            ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:amd64-latest
           load: true
 
@@ -100,7 +88,7 @@ jobs:
           build-args: |
             ARCH=arm64v8
           tags: |
-            ${{ env.IMAGE_NAME }}:arm64v8-${{ env.TAGNAME }}
+            ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm64v8-latest
           load: true
 
@@ -113,14 +101,14 @@ jobs:
           build-args: |
             ARCH=arm32v6
           tags: |
-            ${{ env.IMAGE_NAME }}:arm32v6-${{ env.TAGNAME }}
+            ${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm32v6-latest
           load: true
 
       - name: Run Trivy vulnerability scanner (amd64)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}'
+          image-ref: '${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -130,7 +118,7 @@ jobs:
       - name: Run Trivy vulnerability scanner (arm64v8)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ env.IMAGE_NAME }}:arm64v8-${{ env.TAGNAME }}'
+          image-ref: '${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -140,14 +128,76 @@ jobs:
       - name: Run Trivy vulnerability scanner (arm32v6)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ env.IMAGE_NAME }}:arm32v6-${{ env.TAGNAME }}'
+          image-ref: '${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
+      #- name: Build amd64
+      #  uses: docker/build-push-action@v2
+      #  with:
+      #    context: .
+      #    file: ./Dockerfile.buildx
+      #    platforms: linux/amd64
+      #    build-args: |
+      #      ARCH=amd64
+      #    tags: |
+      #      ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
+      #      ${{ env.IMAGE_NAME }}:amd64-latest
+      #    push: true
+
+      - name: Build arm64v8
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.buildx
+          platforms: linux/arm64
+          build-args: |
+            ARCH=arm64v8
+          tags: |
+            ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
+            ${{ env.IMAGE_NAME }}:arm64v8-latest
+          push: true
+
+      - name: Build arm32v6
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.buildx
+          platforms: linux/arm/v6
+          build-args: |
+            ARCH=arm32v6
+          tags: |
+            ${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}
+            ${{ env.IMAGE_NAME }}:arm32v6-latest
+          push: true
+
+      - name: Build the Docker image release manifest
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled
+        run: |
+          docker manifest create \
+            carlesbarreda/certbot:$RELEASE \
+              --amend carlesbarreda/certbot:amd64-$RELEASE \
+              --amend carlesbarreda/certbot:arm64v8-$RELEASE \
+              --amend carlesbarreda/certbot:arm32v6-$RELEASE
+          docker manifest push carlesbarreda/certbot:$RELEASE
+
+      - name: Build the Docker image latest manifest
+        #if: ${{ github.event.inputs.latest == 'yes' }}
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled
+        run: |
+          docker manifest create \
+            carlesbarreda/certbot:latest \
+              --amend carlesbarreda/certbot:amd64-latest \
+              --amend carlesbarreda/certbot:arm64v8-latest \
+              --amend carlesbarreda/certbot:arm32v6-latest
+          docker manifest push carlesbarreda/certbot:latest
+
 #TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
 #DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
-#TAGNAME=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
-#echo $TAGNAME
+#RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
+#echo $RELEASE
