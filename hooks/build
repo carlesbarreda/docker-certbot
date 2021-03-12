@@ -13,8 +13,6 @@ docker buildx create --name multiarch --driver docker-container --use
 docker buildx inspect --bootstrap
 
 docker buildx build \
-    --tag ${DOCKER_REPO}:latest \
-    --tag ${DOCKER_REPO}:${RELEASE} \
     --tag ${DOCKER_REPO}:amd64-latest \
     --tag ${DOCKER_REPO}:amd64-${RELEASE} \
     --build-arg ARCH=amd64 \
