@@ -8,6 +8,4 @@ TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq 
 DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
 RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
 
-echo $RELEASE
-
-docker build . -t ${IMAGE_NAME} -t carlesbarreda/certbot:amd64-$RELEASE
+docker build . -t ${IMAGE_NAME} -t ${IMAGE_NAME/latest/$RELEASE}
