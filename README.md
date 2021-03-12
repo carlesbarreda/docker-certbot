@@ -4,6 +4,8 @@ Multiplatform image based on [certbot/certbot](https://hub.docker.com/r/certbot/
 
 [![Docker Image CI](https://github.com/carlesbarreda/docker-certbot/actions/workflows/docker-image-ci.yml/badge.svg)](https://github.com/carlesbarreda/docker-certbot/actions/workflows/docker-image-ci.yml)
 
+[![Docker Image CI](https://github.com/carlesbarreda/docker-certbot/actions/workflows/docker-image-ci.yml/badge.svg?event=workflow_dispatch)](https://github.com/carlesbarreda/docker-certbot/actions/workflows/docker-image-ci.yml)
+
 ## How to use
 
 1. Create directories and Dinahosting credential account INI file.
