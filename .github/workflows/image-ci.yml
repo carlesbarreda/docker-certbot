@@ -49,7 +49,12 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
 
       - name: Image tag
-        run: echo carlesbarreda/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        run: |
+          echo carlesbarreda/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
+          DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
+          TAG_VERSION=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
+          echo $TAG_VERSION
 
       - name: Build Docker image
         uses: docker/build-push-action@v2
