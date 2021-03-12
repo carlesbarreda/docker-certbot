@@ -1,4 +1,8 @@
-FROM certbot/certbot:amd64-latest
+# syntax=docker/dockerfile:1.2
+ARG ARCH
+FROM --platform=${TARGETPLATFORM} certbot/certbot:${ARCH}-latest
+
+ARG TARGETPLATFORM
 
 LABEL maintainer="docker@carlesbarreda.cat"
 
