@@ -10,5 +10,4 @@ echo $RELEASE
 
 env
 
-
-docker build -t . -t ${IMAGE_NAME} -t ${IMAGE_NAME}:amd64-$RELEASE
+docker build . -t ${IMAGE_NAME} -t carlesbarreda/certbot:amd64-$RELEASE
