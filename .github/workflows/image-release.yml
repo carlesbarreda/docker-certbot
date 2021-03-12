@@ -8,7 +8,8 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: ${{ github.event.repository.name }}
+  #IMAGE_NAME: ${{ github.event.repository.name }}
+  IMAGE_NAME: certbot
 
 jobs:
   build:
@@ -47,9 +48,12 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
           logout: true
 
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+      - name: Image tag
+        run: |
+          TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
+          DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
+          TAGNAME=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
+          echo "TAGNAME=$TAGNAME" >> $GITHUB_ENV
 
       - name: Build and push
         uses: docker/build-push-action@v2

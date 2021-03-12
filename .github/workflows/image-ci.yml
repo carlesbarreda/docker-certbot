@@ -8,7 +8,8 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: ${{ github.event.repository.name }}
+  #IMAGE_NAME: ${{ github.event.repository.name }}
+  IMAGE_NAME: certbot
 
 jobs:
   lint:
@@ -35,7 +36,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # https://github.com/docker/setup-buildx-action
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        id: qemu
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: all
+
+      - name: Available platforms
+        run: echo ${{ steps.qemu.outputs.platforms }}
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
         id: buildx
@@ -50,12 +60,10 @@ jobs:
 
       - name: Image tag
         run: |
-          #echo carlesbarreda/${{ env.IMAGE_NAME }}:${{ github.sha }}
           TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
           DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
           TAGNAME=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
           echo "TAGNAME=$TAGNAME" >> $GITHUB_ENV
-          echo carlesbarreda/${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}
 
       - name: Build Docker image
         uses: docker/build-push-action@v2
@@ -69,7 +77,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'carlesbarreda/${{ env.IMAGE_NAME }}:${{ github.sha }}'
+          image-ref: 'carlesbarreda/${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
@@ -80,5 +88,5 @@ jobs:
 
 #TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
 #DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
-#TAG_VERSION=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
-#echo $TAG_VERSION
+#TAGNAME=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
+#echo $TAGNAME
