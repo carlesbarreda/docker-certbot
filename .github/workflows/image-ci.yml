@@ -9,7 +9,7 @@ on:
 
 env:
   #IMAGE_NAME: ${{ github.event.repository.name }}
-  IMAGE_NAME: certbot
+  IMAGE_NAME: carlesbarreda/certbot
 
 jobs:
   lint:
@@ -65,26 +65,87 @@ jobs:
           TAGNAME=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
           echo "TAGNAME=$TAGNAME" >> $GITHUB_ENV
 
-      - name: Build Docker image
+      - name: Build amd64
         uses: docker/build-push-action@v2
         with:
           context: .
           file: ./Dockerfile
-          load: true
+          platforms: linux/amd64
+          build-args: |
+            ARCH=amd64
           tags: |
-            carlesbarreda/${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}
+            ${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}
+            ${{ env.IMAGE_NAME }}:amd64-latest
+          load: true
 
-      - name: Run Trivy vulnerability scanner
+      - name: Build amd64
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.buildx
+          platforms: linux/amd64
+          build-args: |
+            ARCH=amd64
+          tags: |
+            ${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}
+            ${{ env.IMAGE_NAME }}:amd64-latest
+          load: true
+
+      - name: Build arm64v8
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.buildx
+          platforms: linux/arm64
+          build-args: |
+            ARCH=arm64v8
+          tags: |
+            ${{ env.IMAGE_NAME }}:arm64v8-${{ env.TAGNAME }}
+            ${{ env.IMAGE_NAME }}:arm64v8-latest
+          load: true
+
+      - name: Build arm32v6
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile.buildx
+          platforms: linux/arm/v6
+          build-args: |
+            ARCH=arm32v6
+          tags: |
+            ${{ env.IMAGE_NAME }}:arm32v6-${{ env.TAGNAME }}
+            ${{ env.IMAGE_NAME }}:arm32v6-latest
+          load: true
+
+      - name: Run Trivy vulnerability scanner (amd64)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'carlesbarreda/${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}'
+          image-ref: '${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}'
           format: 'table'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
 
+      - name: Run Trivy vulnerability scanner (arm64v8)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.IMAGE_NAME }}:arm64v8-${{ env.TAGNAME }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
 
+      - name: Run Trivy vulnerability scanner (arm32v6)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ env.IMAGE_NAME }}:arm32v6-${{ env.TAGNAME }}'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
 
 #TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
 #DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
