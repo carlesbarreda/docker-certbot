@@ -219,9 +219,9 @@ jobs:
         run: |
           docker manifest create \
             carlesbarreda/certbot:latest \
-              --amend carlesbarreda/certbot:amd64-latest \
-              --amend carlesbarreda/certbot:arm64v8-latest \
-              --amend carlesbarreda/certbot:arm32v6-latest
+              --amend carlesbarreda/certbot:amd64-$RELEASE \
+              --amend carlesbarreda/certbot:arm64v8-$RELEASE \
+              --amend carlesbarreda/certbot:arm32v6-$RELEASE
           docker manifest push carlesbarreda/certbot:latest
 
     #- name: Remove arch tag
