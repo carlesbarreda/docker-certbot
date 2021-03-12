@@ -54,7 +54,7 @@ jobs:
           TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
           DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
           TAGNAME=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
-          echo "TAGNAME=$TAG_VERSION" >> $GITHUB_ENV
+          echo "TAGNAME=$TAGNAME" >> $GITHUB_ENV
           echo carlesbarreda/${{ env.IMAGE_NAME }}:amd64-${{ env.TAGNAME }}
 
       - name: Build Docker image
