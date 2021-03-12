@@ -18,5 +18,11 @@ docker buildx build \
     --build-arg ARCH=amd64 \
     --platform linux/amd64 \
     --progress=plain \
-    --push \
+    --load \
     .
+
+docker tag ${IMAGE_NAME} carlesbarreda/certbot:latest
+docker tag ${DOCKER_REPO}:amd64-${RELEASE} carlesbarreda/certbot:${RELEASE}
+
+docker push carlesbarreda/certbot:latest
+docker push carlesbarreda/certbot:${RELEASE}
