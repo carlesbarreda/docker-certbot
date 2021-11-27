@@ -224,17 +224,17 @@ jobs:
               --amend carlesbarreda/certbot:arm32v6-$RELEASE
           docker manifest push carlesbarreda/certbot:latest
 
-      - name: Create tag
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ github.token }}
-          script: |
-            github.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: "refs/tags/$RELEASE",
-              sha: context.sha
-            })
+      #- name: Create tag
+      #  uses: actions/github-script@v3
+      #  with:
+      #    github-token: ${{ github.token }}
+      #    script: |
+      #      github.git.createRef({
+      #        owner: context.repo.owner,
+      #        repo: context.repo.repo,
+      #        ref: "refs/tags/$RELEASE",
+      #        sha: context.sha
+      #      })
 
     #- name: Remove arch tag
     #  run: |
