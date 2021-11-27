@@ -100,35 +100,35 @@ jobs:
             ${{ env.IMAGE_NAME }}:arm32v6-latest
           load: true
 
-      - name: Run Trivy vulnerability scanner (amd64)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+      #- name: Run Trivy vulnerability scanner (amd64)
+      #  uses: aquasecurity/trivy-action@master
+      #  with:
+      #    image-ref: '${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}'
+      #    format: 'table'
+      #    exit-code: '1'
+      #    ignore-unfixed: true
+      #    vuln-type: 'os,library'
+      #    severity: 'CRITICAL,HIGH'
 
-      - name: Run Trivy vulnerability scanner (arm64v8)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+      #- name: Run Trivy vulnerability scanner (arm64v8)
+      #  uses: aquasecurity/trivy-action@master
+      #  with:
+      #    image-ref: '${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}'
+      #    format: 'table'
+      #    exit-code: '1'
+      #    ignore-unfixed: true
+      #    vuln-type: 'os,library'
+      #    severity: 'CRITICAL,HIGH'
 
-      - name: Run Trivy vulnerability scanner (arm32v6)
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: '${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+      #- name: Run Trivy vulnerability scanner (arm32v6)
+      #  uses: aquasecurity/trivy-action@master
+      #  with:
+      #    image-ref: '${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}'
+      #    format: 'table'
+      #    exit-code: '1'
+      #    ignore-unfixed: true
+      #    vuln-type: 'os,library'
+      #    severity: 'CRITICAL,HIGH'
 
   pusher:
     name: Build and push
