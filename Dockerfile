@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.2
-ARG ARCH
-FROM --platform=${TARGETPLATFORM} certbot/certbot:${ARCH}-latest
+FROM --platform=${TARGETPLATFORM} certbot/certbot:${TARGETARCH}-latest
 
 ARG TARGETPLATFORM
+ARG TARGETARCH
 
 LABEL maintainer="docker@carlesbarreda.cat"
 

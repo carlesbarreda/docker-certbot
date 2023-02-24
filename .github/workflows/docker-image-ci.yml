@@ -55,7 +55,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           build-args: |
-            ARCH=amd64
+            TARGETARCH=amd64
           tags: |
             ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:amd64-latest
@@ -68,7 +68,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           build-args: |
-            ARCH=amd64
+            TARGETARCH=amd64
           tags: |
             ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:amd64-latest
@@ -81,7 +81,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/arm64
           build-args: |
-            ARCH=arm64v8
+            TARGETARCH=arm64v8
           tags: |
             ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm64v8-latest
@@ -94,7 +94,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/arm/v6
           build-args: |
-            ARCH=arm32v6
+            TARGETARCH=arm32v6
           tags: |
             ${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm32v6-latest
@@ -169,7 +169,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           build-args: |
-            ARCH=amd64
+            TARGETARCH=amd64
           tags: |
             ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:amd64-latest
@@ -182,7 +182,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/arm64
           build-args: |
-            ARCH=arm64v8
+            TARGETARCH=arm64v8
           tags: |
             ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm64v8-latest
@@ -195,7 +195,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/arm/v6
           build-args: |
-            ARCH=arm32v6
+            TARGETARCH=arm32v6
           tags: |
             ${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm32v6-latest
@@ -236,7 +236,7 @@ jobs:
       #        sha: context.sha
       #      })
 
-    #- name: Remove arch tag
+    #- name: Remove TARGETARCH tag
     #  run: |
     #    LOGIN=$(echo -e "{\n  \"username\": \"${{ secrets.DOCKER_USERNAME }}\",\n  \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"\n}\n")
     #    TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "$LOGIN" "https://hub.docker.com/v2/users/login/" | jq -r .token)
