@@ -1,21 +1,18 @@
 # syntax=docker/dockerfile:1.2
-FROM --platform=linux/amd64 certbot/certbot:amd64-latest
+ARG TARGETPLATFORM
+ARG TARGETARCH
+FROM --platform=${TARGETPLATFORM} certbot/certbot:${TARGETARCH}-latest
+#FROM --platform=linux/amd64 certbot/certbot:amd64-latest
 #FROM --platform=${TARGETPLATFORM} certbot/certbot:amd64-latest
 #FROM --platform=${TARGETPLATFORM} certbot/certbot:${TGT[$TARGETARCH]}-latest
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETVARIANT
-ARG TGT
-
-SHELL ["/bin/bash", "-c"]
 
 RUN echo "TARGETPLATFORM: ${TARGETPLATFORM}" \
     && echo "TARGETARCH: ${TARGETARCH}" \
     && echo "TARGETVARIANT: ${TARGETVARIANT}"
-
-RUN echo "TGT${TARGETARCH}:" \
-    && echo ${TGT["${TARGETARCH}"]}
 
 LABEL maintainer="docker@carlesbarreda.cat"
 
