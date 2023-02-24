@@ -11,11 +11,14 @@ env:
   IMAGE_NAME: carlesbarreda/certbot
 
 permissions:
-  contents: read
+  #contents: read
+  contents: write
   packages: write
   # This is used to complete the identity challenge
   # with sigstore/fulcio when running outside of PRs.
   id-token: write
+  pull-requests: write
+  repository-projects: write
 
 jobs:
   pusher:
