@@ -2,8 +2,8 @@
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TGT
-#FROM certbot/certbot:latest as builder
-FROM --platform=${TARGETPLATFORM} certbot/certbot:amd64-latest
+FROM --platform=linux/amd64 certbot/certbot:amd64-latest
+#FROM --platform=${TARGETPLATFORM} certbot/certbot:amd64-latest
 #FROM --platform=${TARGETPLATFORM} certbot/certbot:${TGT[$TARGETARCH]}-latest
 
 ARG TARGETPLATFORM
