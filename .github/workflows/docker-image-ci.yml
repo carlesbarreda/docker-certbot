@@ -10,6 +10,13 @@ on:
 env:
   IMAGE_NAME: carlesbarreda/certbot
 
+permissions:
+  contents: read
+  packages: write
+  # This is used to complete the identity challenge
+  # with sigstore/fulcio when running outside of PRs.
+  id-token: write
+
 jobs:
   pusher:
     name: Build and push
@@ -84,6 +91,28 @@ jobs:
             ${{ env.IMAGE_NAME }}:arm32v6-latest
           push: true
 
+      - name: Create tag
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/${{ env.RELEASE }}",
+              sha: context.sha
+            })
+
+      - uses: actions/checkout@v3
+      - name: Create VERSION file
+        run: echo "${{ env.RELEASE }}" > VERSION
+      - name: Commit VERSION
+        run: |
+          git config --global user.name 'Carles Barreda'
+          git config --global user.email '9409275+carlesbarreda@users.noreply.github.com'
+          git commit -am "Automated VERSION"
+          git push
+
       #- name: Create and push manifest release images
       #  uses: Noelware/docker-manifest-action@master # or use a pinned version in the Releases tab
       #  with:
@@ -100,16 +129,16 @@ jobs:
       #    amend: true
       #    push: true
 
-      #- name: Build the Docker image release manifest
-      #  env:
-      #    DOCKER_CLI_EXPERIMENTAL: enabled
-      #  run: |
-      #    docker manifest create --amend \
-      #      carlesbarreda/certbot:$RELEASE \
-      #        carlesbarreda/certbot:amd64-$RELEASE \
-      #        carlesbarreda/certbot:arm64v8-$RELEASE \
-      #        carlesbarreda/certbot:arm32v6-$RELEASE
-      #    docker manifest push carlesbarreda/certbot:$RELEASE
+      - name: Build the Docker image release manifest
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled
+        run: |
+          docker manifest create --amend \
+            carlesbarreda/certbot:${{ env.RELEASE }} \
+              carlesbarreda/certbot:amd64-${{ env.RELEASE }} \
+              carlesbarreda/certbot:arm64v8-${{ env.RELEASE }} \
+              carlesbarreda/certbot:arm32v6-${{ env.RELEASE }}
+          docker manifest push carlesbarreda/certbot:${{ env.RELEASE }}
 
       #- name: Build the Docker image latest manifest
       #  #if: ${{ github.event.inputs.latest == 'yes' }}
@@ -122,18 +151,6 @@ jobs:
       #        carlesbarreda/certbot:arm64v8-$RELEASE \
       #        carlesbarreda/certbot:arm32v6-$RELEASE
       #    docker manifest push carlesbarreda/certbot:latest
-
-      - name: Create tag
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{ github.token }}
-          script: |
-            github.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: "refs/tags/${{ env.RELEASE }}",
-              sha: context.sha
-            })
 
       #- name: Remove TARGETARCH tag
       #  run: |
