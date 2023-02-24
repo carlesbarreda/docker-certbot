@@ -19,6 +19,7 @@ on:
   #    - main
   #
   workflow_dispatch:
+    branches: [ "main" ]
 
 env:
   # Use docker.io for Docker Hub if empty
