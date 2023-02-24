@@ -49,7 +49,7 @@ jobs:
       - name: Get Image Release
         run: |
           echo ${{ github.ref }}
-          echo ${{ github.tags }}
+          echo ${{ github }}
           echo ${{ env.RELEASE }}
 
       - name: Check tag exists
