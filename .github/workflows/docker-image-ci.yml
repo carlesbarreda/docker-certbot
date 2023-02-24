@@ -61,9 +61,9 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/arm64
+          platforms: linux/arm64/v8
           build-args: |
-            TARGETPLATFORM=linux/arm64
+            TARGETPLATFORM=linux/arm64/v8
             TARGETARCH=arm64v8
           tags: |
             ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
