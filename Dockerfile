@@ -1,9 +1,12 @@
 # syntax=docker/dockerfile:1.2
+ARG TARGETPLATFORM
+ARG TARGETARCH
+ARG TARGETIMAGE="certbot/certbot"
 FROM certbot/certbot:latest as builder
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
-ARG TARGETIMAGE="certbot/certbot"
+ARG TARGETIMAGE
 #ENV TARGETIMAGE="certbot/certbot"
 
 RUN case ${TARGETPLATFORM} in \
@@ -16,14 +19,16 @@ RUN case ${TARGETPLATFORM} in \
 	linux/arm/v8) \
 		export TARGETIMAGE="certbot/certbot:arm64v8-latest" \
 		;; \
-	esac
+	esac \
+    && echo "TARGETPLATFORM: ${TARGETPLATFORM}" \
+    && echo "TARGETIMAGE: ${TARGETIMAGE}"
 
 #FROM --platform=${TARGETPLATFORM} certbot/certbot:${TARGETARCH}${TARGETVARIANT}-latest
 FROM --platform=${TARGETPLATFORM} ${TARGETIMAGE}
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
-ARG TARGETIMAGE
+#ARG TARGETIMAGE
 
 LABEL maintainer="docker@carlesbarreda.cat"
 
