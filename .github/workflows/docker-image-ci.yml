@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   schedule:
-    - cron: '41 23 * * *'
+    - cron: '00 23 * * *'
     #- timezone: 'Europe/Madrid'
 
   #push:
@@ -57,10 +57,6 @@ jobs:
         uses: docker/setup-buildx-action@v2
         with:
           install: true
-
-      - name: Get Last Docker Image Release
-        run: |
-          date
 
       - name: Get Last Docker Image Release
         run: |
