@@ -13,7 +13,8 @@ ARG TGT
 RUN echo "TARGETPLATFORM: ${TARGETPLATFORM}" \
     && echo "TARGETIMAGE: ${TARGETIMAGE}"
 
-RUN echo "TGT${TARGETARCH}: ${TGT[$TARGETARCH]}"
+RUN echo "TGT${TARGETARCH}:" \
+    && echo $TGT[$TARGETARCH]
 
 LABEL maintainer="docker@carlesbarreda.cat"
 
