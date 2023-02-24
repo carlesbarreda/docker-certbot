@@ -102,14 +102,14 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           #tags: ${{ env.RELEASE }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64/v8,linux/arm/v6
+          platforms: linux/amd64,linux/arm64,linux/arm/v6
           #platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: |
-            TGT[amd64]="amd64"
-            TGT[arm64]="arm64v8"
-            TGT[arm]="arm32v6"
+          #build-args: |
+          #  TGT[amd64]="amd64"
+          #  TGT[arm64]="arm64v8"
+          #  TGT[arm]="arm32v6"
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker
