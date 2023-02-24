@@ -106,7 +106,7 @@ jobs:
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-arg: |
+          build-args: |
             TGT[amd64]="amd64"
             TGT[arm64]="arm64v8"
             TGT[arm]="arm32v6"
