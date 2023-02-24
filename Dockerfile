@@ -4,7 +4,7 @@ ARG TARGETARCH
 ARG TGT
 #FROM certbot/certbot:latest as builder
 #FROM --platform=${TARGETPLATFORM} certbot/certbot:amd64-latest
-FROM --platform=${TARGETPLATFORM} certbot/certbot:${TGT[$TARGETARCH]}-latest
+FROM --platform=${TARGETPLATFORM} certbot/certbot:${TGT${TARGETARCH}}-latest
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
@@ -12,7 +12,7 @@ ARG TGT
 
 RUN echo "TARGETPLATFORM: ${TARGETPLATFORM}" \
     && echo "TARGETIMAGE: ${TARGETIMAGE}" \
-    && echo "TGT[${TARGETARCH}]: ${TGT[$TARGETARCH]}"
+    && echo "TGT${TARGETARCH}: ${TGT${TARGETARCH}}"
 
 LABEL maintainer="docker@carlesbarreda.cat"
 
