@@ -54,7 +54,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:amd64-latest
-          push: true
+          load: true
 
       - name: Build arm64v8
         uses: docker/build-push-action@v4
@@ -68,7 +68,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm64v8-latest
-          push: true
+          load: true
 
       - name: Build arm32v6
         uses: docker/build-push-action@v4
@@ -82,7 +82,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm32v6-latest
-          push: true
+          load: true
 
       - name: Build the Docker image release manifest
         env:
