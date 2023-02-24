@@ -4,8 +4,8 @@ ARG TARGETARCH
 ARG TARGETIMAGE="certbot/certbot"
 FROM certbot/certbot:latest as builder
 
-ARG TARGETPLATFORM
-ARG TARGETARCH
+#ARG TARGETPLATFORM
+#ARG TARGETARCH
 ARG TARGETIMAGE
 #ENV TARGETIMAGE="certbot/certbot"
 
@@ -32,6 +32,8 @@ ARG TARGETARCH
 #ARG TARGETIMAGE
 
 LABEL maintainer="docker@carlesbarreda.cat"
+
+RUN echo "TARGETIMAGE: ${TARGETIMAGE}"
 
 RUN set -eux; \
     apk add --no-cache --virtual .build-deps git=~2; \
