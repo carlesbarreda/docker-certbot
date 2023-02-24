@@ -108,10 +108,10 @@ jobs:
           #platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          #build-args: |
-          #  TGT[amd64]="amd64"
-          #  TGT[arm64]="arm64v8"
-          #  TGT[arm]="arm32v6"
+          build-args: |
+            TGTamd64="amd64"
+            TGTarm64="arm64v8"
+            TGTarm="arm32v6"
 
       # Sign the resulting Docker image digest except on PRs.
       # This will only write to the public Rekor transparency log when the Docker

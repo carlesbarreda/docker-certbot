@@ -5,13 +5,13 @@ FROM --platform=linux/amd64 certbot/certbot:amd64-latest
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
-#ARG TGT
+ARG TGT
 
 RUN echo "TARGETPLATFORM: ${TARGETPLATFORM}" \
     && echo "TARGETARCH: ${TARGETARCH}"
 
-#RUN echo "TGT${TARGETARCH}:" \
-#    && echo $TGT[$TARGETARCH]
+RUN echo "TGT${TARGETARCH}:" \
+    && echo ${TGT$TARGETARCH}
 
 LABEL maintainer="docker@carlesbarreda.cat"
 
