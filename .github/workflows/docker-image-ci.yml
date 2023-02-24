@@ -84,56 +84,56 @@ jobs:
             ${{ env.IMAGE_NAME }}:arm32v6-latest
           push: true
 
-      - name: Create and push manifest release images
-        uses: Noelware/docker-manifest-action@master # or use a pinned version in the Releases tab
-        with:
-          inputs: carlesbarreda/certbot:${{ env.RELEASE }}
-          images: carlesbarreda/certbot:amd64-${{ env.RELEASE }},carlesbarreda/certbot:arm64v8-${{ env.RELEASE }},carlesbarreda/certbot:arm32v6-${{ env.RELEASE }}
-          amend: true
-          push: true
-
-      - name: Create and push manifest latest images
-        uses: Noelware/docker-manifest-action@master # or use a pinned version in the Releases tab
-        with:
-          inputs: carlesbarreda/certbot:latest
-          images: carlesbarreda/certbot:amd64-latest,carlesbarreda/certbot:arm64v8-latest,carlesbarreda/certbot:arm32v6-latest
-          amend: true
-          push: true
-
-      - name: Build the Docker image release manifest
-        env:
-          DOCKER_CLI_EXPERIMENTAL: enabled
-        run: |
-          docker manifest create --amend \
-            carlesbarreda/certbot:$RELEASE \
-              carlesbarreda/certbot:amd64-$RELEASE \
-              carlesbarreda/certbot:arm64v8-$RELEASE \
-              carlesbarreda/certbot:arm32v6-$RELEASE
-          docker manifest push carlesbarreda/certbot:$RELEASE
-
-      - name: Build the Docker image latest manifest
-        #if: ${{ github.event.inputs.latest == 'yes' }}
-        env:
-          DOCKER_CLI_EXPERIMENTAL: enabled
-        run: |
-          docker manifest create --amend \
-            carlesbarreda/certbot:latest \
-              carlesbarreda/certbot:amd64-$RELEASE \
-              carlesbarreda/certbot:arm64v8-$RELEASE \
-              carlesbarreda/certbot:arm32v6-$RELEASE
-          docker manifest push carlesbarreda/certbot:latest
-
-      #- name: Create tag
-      #  uses: actions/github-script@v3
+      #- name: Create and push manifest release images
+      #  uses: Noelware/docker-manifest-action@master # or use a pinned version in the Releases tab
       #  with:
-      #    github-token: ${{ github.token }}
-      #    script: |
-      #      github.git.createRef({
-      #        owner: context.repo.owner,
-      #        repo: context.repo.repo,
-      #        ref: "refs/tags/$RELEASE",
-      #        sha: context.sha
-      #      })
+      #    inputs: carlesbarreda/certbot:${{ env.RELEASE }}
+      #    images: carlesbarreda/certbot:amd64-${{ env.RELEASE }},carlesbarreda/certbot:arm64v8-${{ env.RELEASE }},carlesbarreda/certbot:arm32v6-${{ env.RELEASE }}
+      #    amend: true
+      #    push: true
+
+      #- name: Create and push manifest latest images
+      #  uses: Noelware/docker-manifest-action@master # or use a pinned version in the Releases tab
+      #  with:
+      #    inputs: carlesbarreda/certbot:latest
+      #    images: carlesbarreda/certbot:amd64-latest,carlesbarreda/certbot:arm64v8-latest,carlesbarreda/certbot:arm32v6-latest
+      #    amend: true
+      #    push: true
+
+      #- name: Build the Docker image release manifest
+      #  env:
+      #    DOCKER_CLI_EXPERIMENTAL: enabled
+      #  run: |
+      #    docker manifest create --amend \
+      #      carlesbarreda/certbot:$RELEASE \
+      #        carlesbarreda/certbot:amd64-$RELEASE \
+      #        carlesbarreda/certbot:arm64v8-$RELEASE \
+      #        carlesbarreda/certbot:arm32v6-$RELEASE
+      #    docker manifest push carlesbarreda/certbot:$RELEASE
+
+      #- name: Build the Docker image latest manifest
+      #  #if: ${{ github.event.inputs.latest == 'yes' }}
+      #  env:
+      #    DOCKER_CLI_EXPERIMENTAL: enabled
+      #  run: |
+      #    docker manifest create --amend \
+      #      carlesbarreda/certbot:latest \
+      #        carlesbarreda/certbot:amd64-$RELEASE \
+      #        carlesbarreda/certbot:arm64v8-$RELEASE \
+      #        carlesbarreda/certbot:arm32v6-$RELEASE
+      #    docker manifest push carlesbarreda/certbot:latest
+
+      - name: Create tag
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/$RELEASE",
+              sha: context.sha
+            })
 
       #- name: Remove TARGETARCH tag
       #  run: |
