@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.2
-ARG TARGETPLATFORM
 ARG TARGETARCH
-FROM --platform=${TARGETPLATFORM} certbot/certbot:${TARGETARCH}-latest
+FROM certbot/certbot:${TARGETARCH}-latest
+#FROM --platform=${TARGETPLATFORM} certbot/certbot:${TARGETARCH}-latest
 #FROM --platform=linux/amd64 certbot/certbot:amd64-latest
 #FROM --platform=${TARGETPLATFORM} certbot/certbot:amd64-latest
 #FROM --platform=${TARGETPLATFORM} certbot/certbot:${TGT[$TARGETARCH]}-latest
