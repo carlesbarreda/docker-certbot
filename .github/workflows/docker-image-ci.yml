@@ -1,6 +1,17 @@
 name: Docker Image CI
 
 on:
+  schedule:
+    - cron: '02 23 * * *'
+
+  #push:
+  #  branches: [ "main" ]
+  #  # Publish semver tags as releases.
+  #  tags: [ 'v*.*.*' ]
+
+  #pull_request:
+  #  branches: [ "main" ]
+
   #pull_request:
   #  branches:
   #    - main
@@ -131,18 +142,18 @@ jobs:
               sha: context.sha
             })
 
-      - name: Update VERSION file
-        if: ${{ steps.checkTag.outputs.exists != 'true' }}
-        run: echo "${{ env.RELEASE }}" > VERSION
+      #- name: Update VERSION file
+      #  if: ${{ steps.checkTag.outputs.exists != 'true' }}
+      #  run: echo "${{ env.RELEASE }}" > VERSION
 
-      - name: Commit VERSION
-        if: ${{ steps.checkTag.outputs.exists != 'true' }}
-        run: |
-          git config --global user.name 'Carles Barreda'
-          git config --global user.email '9409275+carlesbarreda@users.noreply.github.com'
-          git add VERSION
-          git commit -am "Automated VERSION"
-          git push
+      #- name: Commit VERSION
+      #  if: ${{ steps.checkTag.outputs.exists != 'true' }}
+      #  run: |
+      #    git config --global user.name 'Carles Barreda'
+      #    git config --global user.email '9409275+carlesbarreda@users.noreply.github.com'
+      #    git add VERSION
+      #    git commit -am "Automated VERSION"
+      #    git push
 
       #- name: Create and push manifest release images
       #  if: ${{ steps.checkTag.outputs.exists != 'true' }}
