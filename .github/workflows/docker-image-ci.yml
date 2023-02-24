@@ -2,9 +2,8 @@ name: Docker Image CI
 
 on:
   schedule:
-    - cron: '30 23 * * *'
+    - cron: '41 23 * * *'
     - timezone: 'Europe/Madrid'
-    - branches: [ "main" ]
 
   #push:
   #  branches: [ "main" ]
