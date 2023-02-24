@@ -2,8 +2,8 @@ name: Docker Image CI
 
 on:
   schedule:
-    - cron: '00 23 * * *'
-    #- timezone: 'Europe/Madrid'
+    - cron: '04 23 * * *'
+    - timezone: 'Europe/Madrid'
 
   #push:
   #  branches: [ "main" ]
@@ -64,6 +64,7 @@ jobs:
           DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
           RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
           echo "RELEASE=$RELEASE" >> $GITHUB_ENV
+          date
 
       - name: Check tag exists
         uses: mukunku/tag-exists-action@v1.2.0
