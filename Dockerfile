@@ -13,7 +13,7 @@ RUN echo "TARGETPLATFORM: ${TARGETPLATFORM}" \
     && echo "TARGETVARIANT: ${TARGETVARIANT}"
 
 RUN echo "TGT${TARGETARCH}:" \
-    && echo $TGT${TARGETARCH}
+    && echo ${TGT["${TARGETARCH}"]}
 
 LABEL maintainer="docker@carlesbarreda.cat"
 
