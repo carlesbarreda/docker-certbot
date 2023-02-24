@@ -6,8 +6,9 @@ name: Docker
 # documentation.
 
 on:
-  #schedule:
-  #  - cron: '26 5 * * *'
+  schedule:
+    - cron: '13 23 * * *'
+    - timezone: 'Europe/Madrid'
 
   #push:
   #  branches: [ "main" ]
