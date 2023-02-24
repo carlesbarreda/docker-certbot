@@ -1,7 +1,9 @@
 name: Experiment
 on: 
-  schedule:
-  - cron: '*/15 * * * *'
+  #schedule:
+  #- cron: '*/15 * * * *'
+
+  workflow_dispatch:
 
 jobs:
   job1:
@@ -13,4 +15,4 @@ jobs:
       uses: actions/checkout@v2
       #with: { ref: debug }
     - name: List files
-      run: ls
+      run: ls -lA
