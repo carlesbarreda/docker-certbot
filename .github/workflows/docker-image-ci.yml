@@ -84,6 +84,22 @@ jobs:
             ${{ env.IMAGE_NAME }}:arm32v6-latest
           push: true
 
+      - name: Create and push manifest release images
+        uses: Noelware/docker-manifest-action@master # or use a pinned version in the Releases tab
+        with:
+          inputs: carlesbarreda/certbot:${{ env.RELEASE }}
+          images: carlesbarreda/certbot:amd64-${{ env.RELEASE }},carlesbarreda/certbot:arm64v8-${{ env.RELEASE }},carlesbarreda/certbot:arm32v6-${{ env.RELEASE }}
+          amend: true
+          push: true
+
+      - name: Create and push manifest latest images
+        uses: Noelware/docker-manifest-action@master # or use a pinned version in the Releases tab
+        with:
+          inputs: carlesbarreda/certbot:latest
+          images: carlesbarreda/certbot:amd64-latest,carlesbarreda/certbot:arm64v8-latest,carlesbarreda/certbot:arm32v6-latest
+          amend: true
+          push: true
+
       - name: Build the Docker image release manifest
         env:
           DOCKER_CLI_EXPERIMENTAL: enabled
