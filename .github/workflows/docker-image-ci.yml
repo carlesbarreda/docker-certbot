@@ -131,7 +131,7 @@ jobs:
             github.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: "refs/tags/$RELEASE",
+              ref: "refs/tags/${{ env.RELEASE }}",
               sha: context.sha
             })
 
