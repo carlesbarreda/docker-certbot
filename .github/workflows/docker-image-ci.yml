@@ -67,14 +67,14 @@ jobs:
           echo "BUILD=$BUILD" >> $GITHUB_ENV
 
       - name: Set up QEMU
-        if: ${{ env.BUILD  }} == 'true'
+        if: env.BUILD == 'true'
         uses: docker/setup-qemu-action@v2
         with:
           image: tonistiigi/binfmt:latest
           platforms: all
 
       - name: Set up Docker Buildx
-        if: ${{ env.BUILD  }} == 'true'
+        if: env.BUILD == 'true'
         uses: docker/setup-buildx-action@v2
         with:
           install: true
@@ -82,7 +82,7 @@ jobs:
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Login to Docker Hub
-        if: ${{ env.BUILD  }} == 'true' && github.event_name != 'pull_request'
+        if: env.BUILD == 'true' && github.event_name != 'pull_request'
         #uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
         uses: docker/login-action@v2
         with:
@@ -92,7 +92,7 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build amd64
-        if: ${{ env.BUILD  }} == 'true'
+        if: env.BUILD == 'true'
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -107,7 +107,7 @@ jobs:
           push: true
 
       - name: Build arm64v8
-        if: ${{ env.BUILD  }} == 'true'
+        if: env.BUILD == 'true'
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -122,7 +122,7 @@ jobs:
           push: true
 
       - name: Build arm32v6
-        if: ${{ env.BUILD  }} == 'true'
+        if: env.BUILD == 'true'
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -156,7 +156,7 @@ jobs:
           echo "COMMIT=true" >> $GITHUB_ENV
 
       - name: Commit changes
-        if: ${{ env.COMMIT }} == 'true'
+        if: env.COMMIT == 'true'
         run: |
           git config --global user.name 'Carles Barreda'
           git config --global user.email '9409275+carlesbarreda@users.noreply.github.com'
@@ -166,7 +166,7 @@ jobs:
           git push
 
       #- name: Create and push manifest release images
-      #  if: ${{ env.BUILD  }} == 'true'
+      #  if: env.BUILD == 'true'
       #  uses: Noelware/docker-manifest-action@master # or use a pinned version in the Releases tab
       #  with:
       #    inputs: carlesbarreda/certbot:${{ env.RELEASE }}
@@ -175,7 +175,7 @@ jobs:
       #    push: true
 
       #- name: Create and push manifest latest images
-      #  if: ${{ env.BUILD  }} == 'true'
+      #  if: env.BUILD == 'true'
       #  uses: Noelware/docker-manifest-action@master # or use a pinned version in the Releases tab
       #  with:
       #    inputs: carlesbarreda/certbot:latest
@@ -184,7 +184,7 @@ jobs:
       #    push: true
 
       #- name: Build the Docker image release manifest
-      #  if: ${{ env.BUILD  }} == 'true'
+      #  if: env.BUILD == 'true'
       #  env:
       #    DOCKER_CLI_EXPERIMENTAL: enabled
       #  run: |
@@ -196,7 +196,7 @@ jobs:
       #    docker manifest push carlesbarreda/certbot:${{ env.RELEASE }}
 
       #- name: Build the Docker image latest manifest
-      #  if: ${{ env.BUILD  }} == 'true'
+      #  if: env.BUILD == 'true'
       #  #if: ${{ github.event.inputs.latest == 'yes' }}
       #  env:
       #    DOCKER_CLI_EXPERIMENTAL: enabled
@@ -209,7 +209,7 @@ jobs:
       #    docker manifest push carlesbarreda/certbot:latest
 
       #- name: Remove TARGETARCH tag
-      #  if: ${{ env.BUILD  }} == 'true'
+      #  if: env.BUILD == 'true'
       #  run: |
       #    LOGIN=$(echo -e "{\n  \"username\": \"${{ secrets.DOCKER_USERNAME }}\",\n  \"password\": \"${{ secrets.DOCKER_PASSWORD }}\"\n}\n")
       #    TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d "$LOGIN" "https://hub.docker.com/v2/users/login/" | jq -r .token)
