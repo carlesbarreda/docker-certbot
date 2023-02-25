@@ -74,7 +74,7 @@ jobs:
           echo "BUILD=$BUILD" >> $GITHUB_ENV
 
       - name: Set up QEMU
-        if: ${{ env.BUILD }} == 'true'
+        if: '${{ env.BUILD }}' == 'true'
         uses: docker/setup-qemu-action@v2
         with:
           image: tonistiigi/binfmt:latest
