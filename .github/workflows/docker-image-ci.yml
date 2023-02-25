@@ -1,7 +1,7 @@
 name: Docker Image CI
 on:
   schedule:
-    - cron: '30 0 * * *'
+    - cron: '36 9 * * *'
 
   #push:
   #  branches: [ "main" ]
@@ -128,7 +128,7 @@ jobs:
 
       - name: Create tag
         if: ${{ steps.checkTag.outputs.exists != 'true' }}
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6
         with:
           github-token: ${{ github.token }}
           script: |
