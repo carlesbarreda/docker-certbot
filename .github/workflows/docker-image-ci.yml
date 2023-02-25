@@ -194,8 +194,8 @@ jobs:
             carlesbarreda/certbot:${{ env.RELEASE }} \
               carlesbarreda/certbot:amd64-${{ env.RELEASE }} \
               carlesbarreda/certbot:arm64v8-${{ env.RELEASE }} \
-              carlesbarreda/certbot:arm32v6-${{ env.RELEASE }}
-          docker manifest push carlesbarreda/certbot:${{ env.RELEASE }}
+              carlesbarreda/certbot:arm32v6-${{ env.RELEASE }} || echo "Fail!"
+          docker manifest push carlesbarreda/certbot:${{ env.RELEASE }} || echo "Fail!"
 
       - name: Build the Docker image latest manifest
         if: env.BUILD == 'true'
@@ -207,8 +207,8 @@ jobs:
             carlesbarreda/certbot:latest \
               carlesbarreda/certbot:amd64-$RELEASE \
               carlesbarreda/certbot:arm64v8-$RELEASE \
-              carlesbarreda/certbot:arm32v6-$RELEASE
-          docker manifest push carlesbarreda/certbot:latest
+              carlesbarreda/certbot:arm32v6-$RELEASE || echo "Fail!"
+          docker manifest push carlesbarreda/certbot:latest || echo "Fail!"
 
       #- name: Remove TARGETARCH tag
       #  if: env.BUILD == 'true'
