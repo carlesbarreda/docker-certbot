@@ -157,7 +157,7 @@ jobs:
           echo "COMMIT=true" >> $GITHUB_ENV
 
       - name: Commit Changes
-        if: env.COMMIT != 'true'
+        if: env.COMMIT == 'true'
         run: |
           git config --global user.name 'Carles Barreda'
           git config --global user.email '9409275+carlesbarreda@users.noreply.github.com'
