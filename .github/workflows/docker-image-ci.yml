@@ -185,30 +185,30 @@ jobs:
       #    amend: true
       #    push: true
 
-      #- name: Build the Docker image release manifest
-      #  if: env.BUILD == 'true'
-      #  env:
-      #    DOCKER_CLI_EXPERIMENTAL: enabled
-      #  run: |
-      #    docker manifest create --amend \
-      #      carlesbarreda/certbot:${{ env.RELEASE }} \
-      #        carlesbarreda/certbot:amd64-${{ env.RELEASE }} \
-      #        carlesbarreda/certbot:arm64v8-${{ env.RELEASE }} \
-      #        carlesbarreda/certbot:arm32v6-${{ env.RELEASE }}
-      #    docker manifest push carlesbarreda/certbot:${{ env.RELEASE }}
+      - name: Build the Docker image release manifest
+        if: env.BUILD == 'true'
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled
+        run: |
+          docker manifest create --amend \
+            carlesbarreda/certbot:${{ env.RELEASE }} \
+              carlesbarreda/certbot:amd64-${{ env.RELEASE }} \
+              carlesbarreda/certbot:arm64v8-${{ env.RELEASE }} \
+              carlesbarreda/certbot:arm32v6-${{ env.RELEASE }}
+          docker manifest push carlesbarreda/certbot:${{ env.RELEASE }}
 
-      #- name: Build the Docker image latest manifest
-      #  if: env.BUILD == 'true'
-      #  #if: ${{ github.event.inputs.latest == 'yes' }}
-      #  env:
-      #    DOCKER_CLI_EXPERIMENTAL: enabled
-      #  run: |
-      #    docker manifest create --amend \
-      #      carlesbarreda/certbot:latest \
-      #        carlesbarreda/certbot:amd64-$RELEASE \
-      #        carlesbarreda/certbot:arm64v8-$RELEASE \
-      #        carlesbarreda/certbot:arm32v6-$RELEASE
-      #    docker manifest push carlesbarreda/certbot:latest
+      - name: Build the Docker image latest manifest
+        if: env.BUILD == 'true'
+        #if: ${{ github.event.inputs.latest == 'yes' }}
+        env:
+          DOCKER_CLI_EXPERIMENTAL: enabled
+        run: |
+          docker manifest create --amend \
+            carlesbarreda/certbot:latest \
+              carlesbarreda/certbot:amd64-$RELEASE \
+              carlesbarreda/certbot:arm64v8-$RELEASE \
+              carlesbarreda/certbot:arm32v6-$RELEASE
+          docker manifest push carlesbarreda/certbot:latest
 
       #- name: Remove TARGETARCH tag
       #  if: env.BUILD == 'true'
