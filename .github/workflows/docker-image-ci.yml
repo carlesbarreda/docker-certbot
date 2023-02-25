@@ -74,7 +74,7 @@ jobs:
 
       - name: Check If Need Build
         run: |
-          [ '${{ env.RELEASE }}' != '${{ env.VERSION}}' || steps.checkTag.outputs.exists != 'true' ] && BUILD='true' || BUILD='false'
+          [[ '${{ env.RELEASE }}' != '${{ env.VERSION}}' || steps.checkTag.outputs.exists != 'true' ]] && BUILD='true' || BUILD='false'
           echo "BUILD=$BUILD" >> $GITHUB_ENV
 
       - name: Set up QEMU
