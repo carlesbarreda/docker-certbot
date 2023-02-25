@@ -64,11 +64,8 @@ jobs:
       - name: Check If Need Build
         run: |
           BUILD=${{ env.BUILD }}
-          echo "$BUILD"
           [[ '${{ env.exists }}' != 'true' && '${{ steps.checkTag.outputs.exists }}' != 'true' ]] && BUILD='true'
-          echo "$BUILD"
           [[ '${{ github.event_name }}' == 'push' ]] && BUILD='true'
-          echo "$BUILD"
           echo "BUILD=$BUILD" >> $GITHUB_ENV
 
       - name: Set up QEMU
