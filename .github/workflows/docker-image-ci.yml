@@ -30,7 +30,7 @@ env:
   COMMIT: false
 
 permissions:
-  contents: write
+  contents: read
   packages: write
   # This is used to complete the identity challenge
   # with sigstore/fulcio when running outside of PRs.
@@ -106,7 +106,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:amd64-latest
-          load: true
+          push: true
 
       - name: Build arm64v8
         if: env.BUILD == 'true'
@@ -121,7 +121,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm64v8-latest
-          load: true
+          push: true
 
       - name: Build arm32v6
         if: env.BUILD == 'true'
@@ -136,7 +136,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm32v6-latest
-          load: true
+          push: true
 
       - name: Create tag
         if: steps.checkTag.outputs.exists != 'true'
@@ -194,8 +194,8 @@ jobs:
             carlesbarreda/certbot:${{ env.RELEASE }} \
               carlesbarreda/certbot:amd64-${{ env.RELEASE }} \
               carlesbarreda/certbot:arm64v8-${{ env.RELEASE }} \
-              carlesbarreda/certbot:arm32v6-${{ env.RELEASE }} || echo "Fail!"
-          docker manifest push carlesbarreda/certbot:${{ env.RELEASE }} || echo "Fail!"
+              carlesbarreda/certbot:arm32v6-${{ env.RELEASE }} && echo "Done !" || echo "Fail !"
+          docker manifest push carlesbarreda/certbot:${{ env.RELEASE }} && echo "Done !" || echo "Fail !"
 
       - name: Build the Docker image latest manifest
         if: env.BUILD == 'true'
@@ -207,8 +207,8 @@ jobs:
             carlesbarreda/certbot:latest \
               carlesbarreda/certbot:amd64-$RELEASE \
               carlesbarreda/certbot:arm64v8-$RELEASE \
-              carlesbarreda/certbot:arm32v6-$RELEASE || echo "Fail!"
-          docker manifest push carlesbarreda/certbot:latest || echo "Fail!"
+              carlesbarreda/certbot:arm32v6-$RELEASE && echo "Done !" || echo "Fail !"
+          docker manifest push carlesbarreda/certbot:latest && echo "Done !" || echo "Fail !"
 
       #- name: Remove TARGETARCH tag
       #  if: env.BUILD == 'true'
