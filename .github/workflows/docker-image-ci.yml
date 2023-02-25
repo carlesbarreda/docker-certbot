@@ -106,7 +106,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:amd64-latest
-          push: true
+          load: true
 
       - name: Build arm64v8
         if: env.BUILD == 'true'
@@ -121,7 +121,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm64v8-latest
-          push: true
+          load: true
 
       - name: Build arm32v6
         if: env.BUILD == 'true'
@@ -136,7 +136,7 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm32v6-latest
-          push: true
+          load: true
 
       - name: Create tag
         if: steps.checkTag.outputs.exists != 'true'
