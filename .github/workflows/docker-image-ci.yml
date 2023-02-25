@@ -72,7 +72,13 @@ jobs:
       #    echo "exists=$exists" >> $GITHUB_OUTPUT
       #    echo $exists
 
+      - name: Check If Need Build
+        run: |
+          [ '${{ env.RELEASE }}' != '${{ env.VERSION}}' || steps.checkTag.outputs.exists != 'true' ] && BUILD='true' || BUILD='false'
+          echo "BUILD=$BUILD" >> $GITHUB_ENV
+
       - name: Set up QEMU
+        if: ${{ env.BUILD }} == 'true'
         uses: docker/setup-qemu-action@v2
         with:
           image: tonistiigi/binfmt:latest
