@@ -63,7 +63,7 @@ jobs:
 
       - name: Check If Need Build
         run: |
-          BUILD=${{ BUILD }}
+          BUILD=${{ env.BUILD }}
           echo "$BUILD"
           [[ '${{ env.exists }}' != 'true' && '${{ steps.checkTag.outputs.exists }}' != 'true' ]] && BUILD='true'
           echo "$BUILD"
