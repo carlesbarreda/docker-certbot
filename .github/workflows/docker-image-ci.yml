@@ -85,7 +85,7 @@ jobs:
         with:
           install: true
           version: latest
-          endpoint: builders
+          #endpoint: builders
           driver-opts: 'image=moby/buildkit:v0.10.5'
           #version: v0.9.1
 
