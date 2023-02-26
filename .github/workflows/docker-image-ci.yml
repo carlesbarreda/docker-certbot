@@ -1,7 +1,7 @@
 name: Docker Image CI
 on:
   schedule:
-    - cron: '00 23 * * *'
+    - cron: '00 23 * * 0'
 
   push:
     branches: [ "main" ]
@@ -46,10 +46,9 @@ jobs:
 
       - name: Get Last Docker Image Release
         run: |
-          #TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
-          #DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
-          #RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
-          RELEASE='v2.2.0'
+          TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
+          DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
+          RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
           [ -f VERSION ] && VERSION=$(cat VERSION) || VERSION=""
           [ "$RELEASE" == "$VERSION" ] && exists='true' || exists='false'
           echo "RELEASE=$RELEASE" >> $GITHUB_ENV
@@ -85,9 +84,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
         with:
           install: true
-          #version: v0.9.1
           version: latest
-          #endpoint: builders
           driver-opts: 'image=moby/buildkit:v0.10.5'
 
       # Login against a Docker registry except on PR
@@ -156,19 +153,6 @@ jobs:
             ${{ env.IMAGE_NAME }}:arm32v6-latest
           push: true
 
-      - name: Create tag
-        if: steps.checkTag.outputs.exists != 'true'
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ github.token }}
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: "refs/tags/${{ env.RELEASE }}",
-              sha: context.sha
-            })
-
       - name: Update VERSION file
         if: env.exists != 'true'
         run: |
@@ -184,6 +168,19 @@ jobs:
           #git add VERSION
           git commit -am "Automated changes"
           git push
+
+      - name: Create tag
+        if: steps.checkTag.outputs.exists != 'true'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            github.rest.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: "refs/tags/${{ env.RELEASE }}",
+              sha: context.sha
+            })
 
       #- name: Create and push manifest release images
       #  if: env.BUILD == 'true'
