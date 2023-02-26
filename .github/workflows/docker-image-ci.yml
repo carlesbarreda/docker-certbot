@@ -46,9 +46,9 @@ jobs:
 
       - name: Get Last Docker Image Release
         run: |
-          TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
-          DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
-          RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
+          #TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
+          #DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
+          #RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
           RELEASE='v1.32.0'
           [ -f VERSION ] && VERSION=$(cat VERSION) || VERSION=""
           [ "$RELEASE" == "$VERSION" ] && exists='true' || exists='false'
@@ -98,7 +98,8 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        #uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
