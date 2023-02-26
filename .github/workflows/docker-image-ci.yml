@@ -117,7 +117,7 @@ jobs:
           platforms: linux/amd64
           build-args: |
             TARGETPLATFORM=linux/amd64
-            TARGETARCH=amd64
+            TARGETARCH=amd64-${{ env.RELEASE }}
           tags: |
             ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:amd64-latest
@@ -132,7 +132,7 @@ jobs:
           platforms: linux/arm64/v8
           build-args: |
             TARGETPLATFORM=linux/arm64/v8
-            TARGETARCH=arm64v8
+            TARGETARCH=arm64v8-${{ env.RELEASE }}
           tags: |
             ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm64v8-latest
@@ -147,7 +147,7 @@ jobs:
           platforms: linux/arm/v6
           build-args: |
             TARGETPLATFORM=linux/arm/v6
-            TARGETARCH=arm32v6
+            TARGETARCH=arm32v6-${{ env.RELEASE }}
           tags: |
             ${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}
             ${{ env.IMAGE_NAME }}:arm32v6-latest

@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.2
-FROM --platform=${TARGETPLATFORM} certbot/certbot:${TARGETARCH}-latest
+FROM --platform=${TARGETPLATFORM} certbot/certbot:${TARGETARCH}
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
