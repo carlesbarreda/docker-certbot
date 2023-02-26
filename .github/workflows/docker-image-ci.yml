@@ -49,7 +49,7 @@ jobs:
           TAGS=$(curl -s https://hub.docker.com/v2/repositories/certbot/certbot/tags | jq '.results[] | {(.name): .images[].digest}')
           DIGEST=$(echo $TAGS | jq . | awk -F': ' '/"latest"/ { print $2 }')
           RELEASE=$(echo $TAGS | jq . | grep $DIGEST | egrep -v 'latest|amd64' | cut -d'"' -f2)
-          RELEASE="v2.1.1"
+          RELEASE="v2.2.0"
           [ -f VERSION ] && VERSION=$(cat VERSION) || VERSION=""
           [ "$RELEASE" == "$VERSION" ] && exists='true' || exists='false'
           echo "RELEASE=$RELEASE" >> $GITHUB_ENV
