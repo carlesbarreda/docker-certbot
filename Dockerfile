@@ -9,7 +9,6 @@ LABEL maintainer="docker@carlesbarreda.cat"
 #    pip install git+https://github.com/rdrgzlng/certbot-dns-dinahosting.git@master; \
 RUN set -eux; \
     apk add --no-cache --virtual .build-deps git=~2; \
-    pip install zope.interface; \
     pip install git+https://github.com/carlesbarreda/certbot-dns-dinahosting.git@certbot-v2; \
     apk del .build-deps
 
