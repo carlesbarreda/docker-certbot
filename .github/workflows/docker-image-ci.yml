@@ -128,7 +128,6 @@ jobs:
           tags: ${{ steps.meta-amd64.outputs.tags }}
           labels: ${{ steps.meta-amd64.outputs.labels }}
           build-args: |
-            TARGETPLATFORM=linux/amd64
             TARGETARCH=amd64-${{ env.RELEASE }}
             BUILDTIME=${{ fromJSON(steps.meta-amd64.outputs.json).labels['org.opencontainers.image.created'] }}
             VERSION=${{ fromJSON(steps.meta-amd64.outputs.json).labels['org.opencontainers.image.version'] }}
@@ -160,7 +159,6 @@ jobs:
           tags: ${{ steps.meta-arm64v8.outputs.tags }}
           labels: ${{ steps.meta-arm64v8.outputs.labels }}
           build-args: |
-            TARGETPLATFORM=linux/arm64/v8
             TARGETARCH=arm64v8-${{ env.RELEASE }}
             BUILDTIME=${{ fromJSON(steps.meta-arm64v8.outputs.json).labels['org.opencontainers.image.created'] }}
             VERSION=${{ fromJSON(steps.meta-arm64v8.outputs.json).labels['org.opencontainers.image.version'] }}
@@ -192,7 +190,6 @@ jobs:
           tags: ${{ steps.meta-arm32v6.outputs.tags }}
           labels: ${{ steps.meta-arm32v6.outputs.labels }}
           build-args: |
-            TARGETPLATFORM=linux/arm/v6
             TARGETARCH=arm32v6-${{ env.RELEASE }}
             BUILDTIME=${{ fromJSON(steps.meta-arm32v6.outputs.json).labels['org.opencontainers.image.created'] }}
             VERSION=${{ fromJSON(steps.meta-arm32v6.outputs.json).labels['org.opencontainers.image.version'] }}

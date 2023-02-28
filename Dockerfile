@@ -1,7 +1,6 @@
 # syntax=docker/dockerfile:1.2
-FROM --platform=${TARGETPLATFORM} certbot/certbot:${TARGETARCH}
+FROM certbot/certbot:${TARGETARCH}
 
-ARG TARGETPLATFORM
 ARG TARGETARCH
 
 RUN set -eux; \
