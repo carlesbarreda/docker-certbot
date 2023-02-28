@@ -104,7 +104,7 @@ jobs:
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
-        id: meta
+        id: meta-amd64
         #uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         uses: docker/metadata-action@v4
         with:
@@ -124,23 +124,23 @@ jobs:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta-amd64.outputs.tags }}
           #tags: |
           #  ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
           #  ${{ env.IMAGE_NAME }}:amd64-latest
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.meta-amd64.outputs.labels }}
           build-args: |
             TARGETPLATFORM=linux/amd64
             TARGETARCH=amd64-${{ env.RELEASE }}
-            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
-            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-            REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+            BUILDTIME=${{ fromJSON(steps.meta-amd64.outputs.json).labels['org.opencontainers.image.created'] }}
+            VERSION=${{ fromJSON(steps.meta-amd64.outputs.json).labels['org.opencontainers.image.version'] }}
+            REVISION=${{ fromJSON(steps.meta-amd64.outputs.json).labels['org.opencontainers.image.revision'] }}
           push: true
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
-        id: meta
+        id: meta-arm64v8
         #uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         uses: docker/metadata-action@v4
         with:
@@ -160,23 +160,23 @@ jobs:
           context: .
           file: ./Dockerfile
           platforms: linux/arm64/v8
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta-arm64v8.outputs.tags }}
           #tags: |
           #  ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
           #  ${{ env.IMAGE_NAME }}:arm64v8-latest
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.meta-arm64v8.outputs.labels }}
           build-args: |
             TARGETPLATFORM=linux/arm64/v8
             TARGETARCH=arm64v8-${{ env.RELEASE }}
-            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
-            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-            REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+            BUILDTIME=${{ fromJSON(steps.meta-arm64v8.outputs.json).labels['org.opencontainers.image.created'] }}
+            VERSION=${{ fromJSON(steps.meta-arm64v8.outputs.json).labels['org.opencontainers.image.version'] }}
+            REVISION=${{ fromJSON(steps.meta-arm64v8.outputs.json).labels['org.opencontainers.image.revision'] }}
           push: true
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
-        id: meta
+        id: meta-arm32v6
         #uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         uses: docker/metadata-action@v4
         with:
@@ -196,17 +196,17 @@ jobs:
           context: .
           file: ./Dockerfile
           platforms: linux/arm/v6
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta-arm32v6.outputs.tags }}
           #tags: |
           #  ${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}
           #  ${{ env.IMAGE_NAME }}:arm32v6-latest
-          labels: ${{ steps.meta.outputs.labels }}
+          labels: ${{ steps.meta-arm32v6.outputs.labels }}
           build-args: |
             TARGETPLATFORM=linux/arm/v6
             TARGETARCH=arm32v6-${{ env.RELEASE }}
-            BUILDTIME=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
-            VERSION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-            REVISION=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.revision'] }}
+            BUILDTIME=${{ fromJSON(steps.meta-arm32v6.outputs.json).labels['org.opencontainers.image.created'] }}
+            VERSION=${{ fromJSON(steps.meta-arm32v6.outputs.json).labels['org.opencontainers.image.version'] }}
+            REVISION=${{ fromJSON(steps.meta-arm32v6.outputs.json).labels['org.opencontainers.image.revision'] }}
           push: true
 
       - name: Update VERSION file
