@@ -33,6 +33,8 @@ env:
   COMMIT: false
   AUTHORS: docker@carlesbarreda.cat
   VENDOR: Carles Barreda
+  GIT_NAME: Carles Barreda
+  GIT_MAIL: 9409275+carlesbarreda@users.noreply.github.com
 
 permissions:
   contents: write
@@ -95,11 +97,9 @@ jobs:
       # https://github.com/docker/login-action
       - name: Login to Docker Hub
         if: env.BUILD == 'true' && github.event_name != 'pull_request'
-        #uses: docker/login-action@28218f9b04b4f3f62068d7b6ce6ca5b26e35336c
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
-          #username: ${{ github.actor }}
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
@@ -205,8 +205,8 @@ jobs:
       - name: Commit Changes
         if: env.COMMIT == 'true'
         run: |
-          git config --global user.name 'Carles Barreda'
-          git config --global user.email '9409275+carlesbarreda@users.noreply.github.com'
+          git config --global user.name '${{ env.GIT_NAME }}'
+          git config --global user.email '${{ env.GIT_MAIL }}'
           git add .
           git commit -am "Automated changes"
           git push
