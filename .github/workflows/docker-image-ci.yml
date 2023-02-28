@@ -31,6 +31,8 @@ env:
   exists: false
   BUILD: false
   COMMIT: false
+  AUTHORS: docker@carlesbarreda.cat
+  VENDOR: Carles Barreda
 
 permissions:
   contents: write
@@ -105,17 +107,16 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta-amd64
-        #uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             amd64-${{ env.RELEASE }}
             amd64-latest
-          version: ${{ env.RELEASE }}
           labels: |
-            org.opencontainers.image.authors=docker@carlesbarreda.cat
-            org.opencontainers.image.vendor=Carles Barreda
+            org.opencontainers.image.authors=${{ env.AUTHORS }}
+            org.opencontainers.image.vendor=${{ env.VENDOR }}
+            org.opencontainers.image.version=${{ env.RELEASE }}
 
       - name: Build amd64
         if: env.BUILD == 'true'
@@ -125,9 +126,6 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64
           tags: ${{ steps.meta-amd64.outputs.tags }}
-          #tags: |
-          #  ${{ env.IMAGE_NAME }}:amd64-${{ env.RELEASE }}
-          #  ${{ env.IMAGE_NAME }}:amd64-latest
           labels: ${{ steps.meta-amd64.outputs.labels }}
           build-args: |
             TARGETPLATFORM=linux/amd64
@@ -141,17 +139,16 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta-arm64v8
-        #uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             arm64v8-${{ env.RELEASE }}
             arm64v8-latest
-          version: ${{ env.RELEASE }}
           labels: |
-            org.opencontainers.image.authors=docker@carlesbarreda.cat
-            org.opencontainers.image.vendor=Carles Barreda
+            org.opencontainers.image.authors=${{ env.AUTHORS }}
+            org.opencontainers.image.vendor=${{ env.VENDOR }}
+            org.opencontainers.image.version=${{ env.RELEASE }}
 
       - name: Build arm64v8
         if: env.BUILD == 'true'
@@ -161,9 +158,6 @@ jobs:
           file: ./Dockerfile
           platforms: linux/arm64/v8
           tags: ${{ steps.meta-arm64v8.outputs.tags }}
-          #tags: |
-          #  ${{ env.IMAGE_NAME }}:arm64v8-${{ env.RELEASE }}
-          #  ${{ env.IMAGE_NAME }}:arm64v8-latest
           labels: ${{ steps.meta-arm64v8.outputs.labels }}
           build-args: |
             TARGETPLATFORM=linux/arm64/v8
@@ -177,17 +171,16 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta-arm32v6
-        #uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             arm32v6-${{ env.RELEASE }}
             arm32v6-latest
-          version: ${{ env.RELEASE }}
           labels: |
-            org.opencontainers.image.authors=docker@carlesbarreda.cat
-            org.opencontainers.image.vendor=Carles Barreda
+            org.opencontainers.image.authors=${{ env.AUTHORS }}
+            org.opencontainers.image.vendor=${{ env.VENDOR }}
+            org.opencontainers.image.version=${{ env.RELEASE }}
 
       - name: Build arm32v6
         if: env.BUILD == 'true'
@@ -197,9 +190,6 @@ jobs:
           file: ./Dockerfile
           platforms: linux/arm/v6
           tags: ${{ steps.meta-arm32v6.outputs.tags }}
-          #tags: |
-          #  ${{ env.IMAGE_NAME }}:arm32v6-${{ env.RELEASE }}
-          #  ${{ env.IMAGE_NAME }}:arm32v6-latest
           labels: ${{ steps.meta-arm32v6.outputs.labels }}
           build-args: |
             TARGETPLATFORM=linux/arm/v6
